@@ -12,6 +12,7 @@ namespace Chat
         public string Jogador_2;
         public int[,] Matriz_Jogo = new int [10, 10];
         public int[,] Matriz_Resposta = new int[10, 10];
+        public bool MinhaVez = true;
 
         public Jogo(string jogador_1, string jogador_2, int[,] matriz_jogo, int[,] matriz_resposta)
         {

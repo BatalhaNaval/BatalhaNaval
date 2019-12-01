@@ -16,3 +16,12 @@ C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\Chat\Ch
 C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\Chat\Chat\obj\Debug\Chat.csproj.GenerateResource.cache
 C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\Chat\Chat\obj\Debug\Chat.exe
 C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\Chat\Chat\obj\Debug\Chat.pdb
+C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\BatalhaNaval\Chat\Chat\bin\Debug\Chat.exe.config
+C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\BatalhaNaval\Chat\Chat\bin\Debug\Chat.exe
+C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\BatalhaNaval\Chat\Chat\bin\Debug\Chat.pdb
+C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\BatalhaNaval\Chat\Chat\obj\Debug\Chat.csprojAssemblyReference.cache
+C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\BatalhaNaval\Chat\Chat\obj\Debug\Chat.Form1.resources
+C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\BatalhaNaval\Chat\Chat\obj\Debug\Chat.Properties.Resources.resources
+C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\BatalhaNaval\Chat\Chat\obj\Debug\Chat.csproj.GenerateResource.cache
+C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\BatalhaNaval\Chat\Chat\obj\Debug\Chat.exe
+C:\Users\laris\OneDrive\Documentos\Engenharia_Computacao\4_Semestre\Chat\BatalhaNaval\Chat\Chat\obj\Debug\Chat.pdb
