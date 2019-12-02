@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Chat
 {
+    /// <summary>
+    /// Representa uma embarcação.
+    /// </summary>
     public class Barco
     {
         public int Tamanho;

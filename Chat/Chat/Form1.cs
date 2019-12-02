@@ -9,8 +9,15 @@ using System.Windows.Forms;
 
 namespace Chat
 {
+    /// <summary>
+    /// Tela Principal do Jogo
+    /// </summary>
     public partial class Form1 : Form
     {
+        #region Variaveis Globais
+        /// <summary>
+        /// Variaveis globais do programas. Dentre elas temos as instancias das 5 embarcações possiveis pelo jogador, o Jogo atual, o socket para transmissão das mensagens e etc;
+        /// </summary>
         Socket socket;
         EndPoint endPointLocal, endPointRemote;
         Jogo game;
@@ -20,7 +27,12 @@ namespace Chat
         Barco b4 = new Barco() { Orientacao = true, Tamanho = 4 };
         Barco b5 = new Barco() { Orientacao = true, Tamanho = 5 };
         int UltimoBarco = 0;
+        #endregion
 
+        #region Inicialização
+        /// <summary>
+        /// Inicialização do Socket e dos IPs
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
@@ -47,6 +59,13 @@ namespace Chat
             return "127.0.0.1";
         }
 
+        #endregion
+
+        #region Recepção de Mensagens do Inimigo
+        /// <summary>
+        /// Responsavel por Receber as Menssagens do jogador Adversário.
+        /// </summary>
+        /// <param name="asyncResult"></param>
         public void MessageCallBack(IAsyncResult asyncResult)
         {
             try
@@ -60,13 +79,14 @@ namespace Chat
 
                     ASCIIEncoding ecg = new ASCIIEncoding();
 
-                    string receiveMessage = ecg.GetString(receiveData);
+                    string receiveMessage = ecg.GetString(receiveData); //Menssagem Recebida;
 
-                    if (receiveMessage.Contains("!@#$%Venceu"))
+                    #region Tratamento Da Mensagem Recebida
+                    if (receiveMessage.Contains("!@#$%Venceu"))//Mensagem de Vitoria
                     {
                         MessageBox.Show("Ganhou Ka!@#$%lho");
                         this.Close();
-                    } else if (receiveMessage.Contains("!@#$% - Acertou ")) {
+                    } else if (receiveMessage.Contains("!@#$% - Acertou ")) { //Informação de que Acertou um Barco
 
                         var aux = receiveMessage.Replace("!@#$% - Acertou : ", "");
                         var x = Convert.ToInt32(aux.Split('x')[0]);
@@ -83,7 +103,7 @@ namespace Chat
                         botao.BackColor = Color.Green;
 
 
-                    } else if (receiveMessage.Contains("!@#$% - Errou "))
+                    } else if (receiveMessage.Contains("!@#$% - Errou ")) //Informação de que Errou um Barco
                     {
 
                         var aux = receiveMessage.Replace("!@#$% - Errou : ", "");
@@ -101,7 +121,7 @@ namespace Chat
                         botao.BackColor = Color.Purple;
 
                     }
-                    else if (receiveMessage.Contains("#?!,.Comando: "))
+                    else if (receiveMessage.Contains("#?!,.Comando: ")) // Informação de um Ataque
                     {
                         groupJogador2.Enabled = true;
                         var butaos = new List<Button>();
@@ -123,7 +143,7 @@ namespace Chat
 
                             System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
 
-                            byte[] msg = enc.GetBytes("!@#$% - Acertou : " + x + "x" + y);
+                            byte[] msg = enc.GetBytes("!@#$% - Acertou : " + x + "x" + y); //Envia para o Inimigo que ele acertou o ataque
 
                             socket.Send(msg);
                         }
@@ -131,7 +151,7 @@ namespace Chat
                         {
                             System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
 
-                            byte[] msg = enc.GetBytes("!@#$% - Errou : " + x + "x" + y);
+                            byte[] msg = enc.GetBytes("!@#$% - Errou : " + x + "x" + y); //Envia para o Inimigo que ele errou o ataque
 
                             socket.Send(msg);
                         }
@@ -160,7 +180,7 @@ namespace Chat
                             {
                                 System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
 
-                                byte[] msg = enc.GetBytes("!@#$%Venceu");
+                                byte[] msg = enc.GetBytes("!@#$%Venceu"); //Envia para o Inimigo que ele venceu o Jogo
 
                                 socket.Send(msg);
                             }
@@ -173,8 +193,10 @@ namespace Chat
                     }
                     else
                     {
-                        listMessage.Items.Add(txtName_2.Text + " disse: " + receiveMessage);
+                        listMessage.Items.Add(txtName_2.Text + " disse: " + receiveMessage); //Escreve a menssagem do inimigo
                     }
+
+                    #endregion
                 }
 
                 byte[] buffer = new byte[1500];
@@ -189,6 +211,14 @@ namespace Chat
             }
         }
 
+        #endregion
+
+        #region Inicializar Conexão
+        /// <summary>
+        /// Realiza a Conexão com o Inimigo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnConnect_Click(object sender, EventArgs e)
         {
             txtIP_1.Enabled = false;
@@ -227,14 +257,18 @@ namespace Chat
                 MessageBox.Show(ex.ToString());
             }
         }
+        #endregion
 
-        private void listMessage_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
+        #region Load Do Form Inicial
+        /// <summary>
+        /// Carregamento Inicial do Form. Esta Parta é responsavel por carregar os componentes visuais, como os botões, e fazer a inicialização da classe Jogo.
+        /// Além disso, esta fução cria os eventos nos botões
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
+            #region Inicializa Variavel Game
             int[,] resposta = new int[10, 10];
 
             for (int i = 0; i < 10; i++)
@@ -246,15 +280,18 @@ namespace Chat
             }
 
             game = new Jogo(txtName_1.Text, txtName_2.Text, resposta, resposta);
+            #endregion
 
             var coluna_1 = (groupJogador1.Width - 20) / 10;
             var altura_1 = (groupJogador1.Height - 25) / 10;
             var coluna_2 = (groupJogador2.Width - 20) / 10;
             var altura_2 = (groupJogador2.Height - 25) / 10;
+
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
+                    #region Cria Botoes do Jogador e do Inimigo
                     var novoBotao1 = new Button()
                     {
                         Name = i + "x" + j,
@@ -274,7 +311,9 @@ namespace Chat
                         Height = altura_2
 
                     };
+                    #endregion
 
+                    #region Evento no Botão do Jogador
                     novoBotao1.Click += (s, elemento) => {
 
                         Button botao = (Button)s;
@@ -288,6 +327,7 @@ namespace Chat
                             ListaButaos.Add((Button)groupJogador1.Controls[a]);
                         }
 
+                        #region Verifica o Barco Selecionado
                         switch (UltimoBarco) 
                         {
                             case 1:
@@ -308,6 +348,7 @@ namespace Chat
                             default:
                                 return;
                         }
+                        #endregion
 
                         if (!barcoSelecionado.Ativo)
                             return;
@@ -322,7 +363,8 @@ namespace Chat
                             
                             }
                         }
-                        
+
+                        #region Verifica se Barco pode ser colocado neste local
                         bool erro = false;
                         var x = Convert.ToInt32(botao.Name.Split('x')[0]);
                         var y = Convert.ToInt32(botao.Name.Split('x')[1]);
@@ -384,9 +426,13 @@ namespace Chat
                         {
                             MessageBox.Show("Não pode colocar barco ai.");
                         }
+                        #endregion
 
                     };
 
+                    #endregion
+
+                    #region Evento no Botao do Inimigo
                     novoBotao2.Click += (s , elemento) => {
 
                         var botaoClicado = (Button)s;
@@ -405,7 +451,9 @@ namespace Chat
                             }
                         }
 
-                    }; 
+                    };
+
+                    #endregion
 
                     groupJogador1.Controls.Add(novoBotao1);
                     groupJogador2.Controls.Add(novoBotao2);
@@ -414,7 +462,9 @@ namespace Chat
 
             }
         }
+        #endregion
 
+        #region Seta Ultimo Barco Clicado
         private void Barco1_Click(object sender, EventArgs e)
         {
             UltimoBarco = 1;
@@ -439,7 +489,9 @@ namespace Chat
         {
             UltimoBarco = 5;
         }
+        #endregion
 
+        #region Alterar Orientação dos Barcos
         private void Barco1_DoubleClick(object sender, EventArgs e)
         {
             b1.Orientacao = !b1.Orientacao;
@@ -470,6 +522,14 @@ namespace Chat
             lblBarco5.Text = new string(lblBarco5.Text.Reverse().ToArray());
         }
 
+        #endregion
+
+        #region Enviar Menssagem Texto
+        /// <summary>
+        /// Envia Menssagem para o Oponente
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSend_Click(object sender, EventArgs e)
         {
             try
@@ -490,5 +550,7 @@ namespace Chat
             }
 
         }
+        #endregion
+
     }
 }

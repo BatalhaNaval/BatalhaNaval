@@ -276,7 +276,6 @@
             this.listMessage.Name = "listMessage";
             this.listMessage.Size = new System.Drawing.Size(853, 68);
             this.listMessage.TabIndex = 2;
-            this.listMessage.SelectedIndexChanged += new System.EventHandler(this.listMessage_SelectedIndexChanged);
             // 
             // groupJogador2
             // 
