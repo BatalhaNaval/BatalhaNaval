@@ -48,7 +48,7 @@ namespace Chat
         {
             IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
 
-            foreach(IPAddress ip in host.AddressList)
+            foreach (IPAddress ip in host.AddressList)
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
@@ -85,25 +85,29 @@ namespace Chat
                     if (receiveMessage.Contains("!@#$%Venceu"))//Mensagem de Vitoria
                     {
                         MessageBox.Show("Ganhou Ka!@#$%lho");
-                        this.Close();
-                    } else if (receiveMessage.Contains("!@#$% - Acertou ")) { //Informação de que Acertou um Barco
+                        FormClose(this);
+
+                    }
+                    else if (receiveMessage.Contains("!@#$% - Acertou "))
+                    { //Informação de que Acertou um Barco
 
                         var aux = receiveMessage.Replace("!@#$% - Acertou : ", "");
                         var x = Convert.ToInt32(aux.Split('x')[0]);
                         var y = Convert.ToInt32(aux.Split('x')[1]);
 
                         var butaos = new List<Button>();
-                        
+
                         for (int i = 0; i < groupJogador2.Controls.Count; i++)
                         {
                             butaos.Add((Button)groupJogador2.Controls[i]);
                         }
 
                         var botao = butaos.FirstOrDefault(q => q.Name == x + "x" + y);
-                        botao.BackColor = Color.Green;
+                        CorBotão(botao, Color.Green);
 
 
-                    } else if (receiveMessage.Contains("!@#$% - Errou ")) //Informação de que Errou um Barco
+                    }
+                    else if (receiveMessage.Contains("!@#$% - Errou ")) //Informação de que Errou um Barco
                     {
 
                         var aux = receiveMessage.Replace("!@#$% - Errou : ", "");
@@ -118,12 +122,12 @@ namespace Chat
                         }
 
                         var botao = butaos.FirstOrDefault(q => q.Name == x + "x" + y);
-                        botao.BackColor = Color.Purple;
+                        CorBotão(botao, Color.Purple);
 
                     }
                     else if (receiveMessage.Contains("#?!,.Comando: ")) // Informação de um Ataque
                     {
-                        groupJogador2.Enabled = true;
+                        EnableGroup(groupJogador2, true);
                         var butaos = new List<Button>();
 
                         var aux = receiveMessage.Replace("#?!,.Comando: ", "");
@@ -136,7 +140,7 @@ namespace Chat
                         }
 
                         var botaoSelecionado = butaos.FirstOrDefault(w => w.Name == x + "x" + y);
-                        botaoSelecionado.BackColor = Color.Red;
+                        CorBotão(botaoSelecionado, Color.Red);
 
                         if (game.Matriz_Jogo[x, y] == 1)
                         {
@@ -193,7 +197,7 @@ namespace Chat
                     }
                     else
                     {
-                        listMessage.Items.Add(txtName_2.Text + " disse: " + receiveMessage); //Escreve a menssagem do inimigo
+                        MensagemTexto(txtName_2.Text + " disse: " + receiveMessage); //Escreve a menssagem do inimigo
                     }
 
                     #endregion
@@ -201,13 +205,66 @@ namespace Chat
 
                 byte[] buffer = new byte[1500];
 
-                socket.BeginReceiveFrom(buffer, 0, buffer.Length, 
-                                        SocketFlags.None, ref endPointRemote, 
+                socket.BeginReceiveFrom(buffer, 0, buffer.Length,
+                                        SocketFlags.None, ref endPointRemote,
                                         new AsyncCallback(MessageCallBack), buffer);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
+            }
+        }
+
+        public delegate void Mensagem(string msg);
+
+        public delegate void CorBotao(Button botao, Color cor);
+
+        public delegate void EnableGrupo(GroupBox grupo, bool status);
+
+        public delegate void FecharForm(Form form);
+        public void MensagemTexto(string msg)
+        {
+            if (listMessage.InvokeRequired)
+            {
+                listMessage.Invoke(new Mensagem(MensagemTexto), msg);
+
+            }
+            else
+            {
+                listMessage.Items.Add(msg);
+            }
+        }
+        public void CorBotão(Button botao, Color cor)
+        {
+            if (botao.InvokeRequired)
+            {
+                botao.Invoke(new CorBotao(CorBotão), botao, cor);
+            }
+            else
+            {
+                botao.BackColor = cor;
+            }
+        }
+        public void EnableGroup(GroupBox grupo, bool status)
+        {
+            if (groupBox1.InvokeRequired)
+            {
+                grupo.Invoke(new EnableGrupo(EnableGroup), grupo, status);
+            }
+            else
+            {
+                grupo.Enabled = status;
+            }
+        }
+        public void FormClose(Form form)
+        {
+            if (groupBox1.InvokeRequired)
+            {
+                form.Invoke(new FecharForm(FormClose), form);
+            }
+            else
+            {
+                form.Close();
             }
         }
 
@@ -228,7 +285,7 @@ namespace Chat
             txtPort_1.Enabled = false;
             txtPort_2.Enabled = false;
             groupJogador1.Enabled = false;
-            
+
             try
             {
                 endPointLocal = new IPEndPoint(IPAddress.Parse(txtIP_1.Text), Convert.ToInt32(txtPort_1.Text));
@@ -328,7 +385,7 @@ namespace Chat
                         }
 
                         #region Verifica o Barco Selecionado
-                        switch (UltimoBarco) 
+                        switch (UltimoBarco)
                         {
                             case 1:
                                 barcoSelecionado = b1;
@@ -353,14 +410,14 @@ namespace Chat
                         if (!barcoSelecionado.Ativo)
                             return;
 
-                        var aux = new int[10,10];
-                      
-                        for(int a = 0; a < 10; a++)
+                        var aux = new int[10, 10];
+
+                        for (int a = 0; a < 10; a++)
                         {
                             for (int b = 0; b < 10; b++)
                             {
                                 aux[a, b] = game.Matriz_Jogo[a, b];
-                            
+
                             }
                         }
 
@@ -373,28 +430,28 @@ namespace Chat
                         {
                             if (barcoSelecionado.Orientacao)
                             {
-                                if (Math.Sqrt(aux.Length) <= (y + w ))
+                                if (Math.Sqrt(aux.Length) <= (y + w))
                                 {
                                     erro = true;
                                 }
-                                else if ( aux[x, y + w] == 0)
+                                else if (aux[x, y + w] == 0)
                                 {
                                     aux[x, y + w] = 1;
                                 }
-                                else 
+                                else
                                 {
                                     erro = true;
                                 }
                             }
-                            else 
+                            else
                             {
-                                if (Math.Sqrt(aux.Length) <= (x + w ))
+                                if (Math.Sqrt(aux.Length) <= (x + w))
                                 {
                                     erro = true;
                                 }
-                                else if ( aux[x+w, y ] == 0)
+                                else if (aux[x + w, y] == 0)
                                 {
-                                    aux[x+w, y ] = 1;
+                                    aux[x + w, y] = 1;
                                 }
                                 else
                                 {
@@ -422,7 +479,7 @@ namespace Chat
                             }
 
                         }
-                        else 
+                        else
                         {
                             MessageBox.Show("Não pode colocar barco ai.");
                         }
@@ -433,7 +490,7 @@ namespace Chat
                     #endregion
 
                     #region Evento no Botao do Inimigo
-                    novoBotao2.Click += (s , elemento) => {
+                    novoBotao2.Click += (s, elemento) => {
 
                         var botaoClicado = (Button)s;
                         if (botaoClicado.BackColor != Color.Green && botaoClicado.BackColor != Color.Purple)
